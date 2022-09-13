@@ -1,0 +1,40 @@
+####Individual gene tree phylogenies
+
+
+###add details about collecting and creating assemblies
+
+After assemblies are complete
+###1: add txt file with species names (***MUST BE IN THE SAME ORDER AS IN THE FASTA FILE) in the following format: 
+
+>1966_Pogoniulus_scolopaceus_
+>19702_Pogoniulus_scolopaceus_
+>19750_Pogoniulus_atroflavus_
+>134161_Viridibucco_leucomystax_
+
+####2: Rename files to add species name to fasta assembly: (https://www.biostars.org/p/103089/) 
+
+awk 'NR%2==0' TGF_52seq_550bp_Sep12.fasta> TGF_seq.fas
+paste -d'\n' TGF_names.txt TGF_seq.fas > TGF_assembly.fa
+
+#first line of code will remove the already existing headers - only the sequences will be left in the TGF_seq.fas file
+#the second line of code will take the TGF_names.txt file - containing the species names to replace with and will bind it to the TGF_seq.fas file to create the TGF_assembly.fa file with the new headers
+
+
+####3: After ensuring that assembly with the new headers is correct, continue on with ALIGNMENT
+
+####4: alignment using MAFFT: 
+
+module load mafft
+mafft 00a_TGF_52seq_550bp_Sep12.fasta > 01_TGF_UCY_aln.fa
+
+
+####5: concat using AMAS and python: 
+
+module load  python/3.7.9
+module load amas
+python AMAS.py concat -f fasta -d dna -i 01_TGF_UCY_aln.fa -p 02_TGF_concat_partition.txt -t 02_TGF_concat_all.phy -u phylip
+sed -i 's/^/GTR+G, /' 02_TGF_concat_partition.txt 
+
+###Alternatively, you can run the 02_alconc.sh script which will run both steps at once
+
+####6 Run raxml using the 04_raxml.sh script for each gene 
