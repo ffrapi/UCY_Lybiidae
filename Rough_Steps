@@ -35,6 +35,6 @@ module load amas
 python AMAS.py concat -f fasta -d dna -i 01_TGF_UCY_aln.fa -p 02_TGF_concat_partition.txt -t 02_TGF_concat_all.phy -u phylip
 sed -i 's/^/GTR+G, /' 02_TGF_concat_partition.txt 
 
-###Alternatively, you can run the 02_alconc.sh script which will run both steps at once
+###Alternatively, you can run the 01_alconc.sh script which will run both steps at once
 
 ####6 Run raxml using the 04_raxml.sh script for each gene 
